@@ -23,6 +23,7 @@ public class GregicProbeConfig {
     public static boolean displayEnergyThousandths = true;
     public static boolean displayItemName = true;
     public static boolean displayFluidName = true;
+    public static boolean displayFluidQuantities = true;
 
     public static int borderColorProgress = 0x00000000;
     public static int backgroundColorProgress = 0;
@@ -46,6 +47,7 @@ public class GregicProbeConfig {
             displayEnergyThousandths = config.getBoolean("DisplayEnergyThousandths", "general", true, "If true, only thousandths of digits are displayed");
             displayItemName = config.getBoolean("ShowItemName", "general", true, "If true, the name of the item will be displayed");
             displayFluidName = config.getBoolean("ShowFluidName", "general", true, "If true, the name of the fluid will be displayed");
+            displayFluidQuantities = config.getBoolean("ShowFluidQuantities", "general", true, "If true, The quantity of the fluid will be displayed below the fluid, instead of the right, this is useful for removing clutter.");
         }
         //colour settings
         {
