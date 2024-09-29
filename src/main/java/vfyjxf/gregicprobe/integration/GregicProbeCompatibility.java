@@ -18,5 +18,8 @@ public class GregicProbeCompatibility {
         if (GregicProbeConfig.displayFluidOutputs) {
             oneProbe.registerProvider(new RecipeFluidOutputInfoProvider());
         }
+        if (GregicProbeConfig.displayCableAverage) {
+            oneProbe.registerProvider(new CableTileInfoProvider());
+        }
     }
 }

@@ -21,6 +21,7 @@ public class GregicProbeConfig {
     public static boolean displayItemName = true;
     public static boolean displayFluidName = true;
     public static boolean displayFluidQuantities = true;
+    public static boolean displayCableAverage = true;
 
     public static void initConfig(File configFile) {
         config = new Configuration(configFile);
@@ -33,6 +34,7 @@ public class GregicProbeConfig {
             displayItemName = config.getBoolean("ShowItemName", "general", true, "If true, the name of the item will be displayed");
             displayFluidName = config.getBoolean("ShowFluidName", "general", true, "If true, the name of the fluid will be displayed");
             displayFluidQuantities = config.getBoolean("ShowFluidQuantities", "general", true, "If true, The quantity of the fluid will be displayed below the fluid, instead of the right, this is useful for removing clutter.");
+            displayCableAverage = config.getBoolean("DisplayCableAverages", "general", true, "If true, the average energy and amperage of a cable net will be shown.");
         }
 
         if (config.hasChanged()) {

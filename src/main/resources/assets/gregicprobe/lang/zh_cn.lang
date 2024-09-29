@@ -1,3 +1,4 @@
 gregicprobe:top.eut=EUt:
 gregicprobe:top.item.outputs=物品制作中:
 gregicprobe.top.fluid.outputs=流体制作中:
+gregicprobe.top.pipe.energy=平均能流: §a%s EU/t §f(%s§f) @ §a%sA
