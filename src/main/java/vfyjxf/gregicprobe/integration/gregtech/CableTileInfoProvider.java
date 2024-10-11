@@ -33,9 +33,7 @@ public class CableTileInfoProvider implements IProbeInfoProvider {
             TileEntityCable tile = (TileEntityCable) cable.getPipeTileEntity(world, iProbeHitData.getPos());
 
             if (tile != null) {
-
-                WeakReference<EnergyNet> reference = ObfuscationReflectionHelper.getPrivateValue(TileEntityCable.class, tile, "currentEnergyNet");
-
+                    
                 double averageVoltage = tile.getAverageVoltage();
                 double averageAmperage = tile.getAverageAmperage();
 

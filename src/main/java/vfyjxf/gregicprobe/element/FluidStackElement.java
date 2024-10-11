@@ -19,32 +19,32 @@ import java.nio.charset.StandardCharsets;
 
 public class FluidStackElement implements IElement {
 
-    private static final int ID = TheOneProbe.theOneProbeImp.registerElementFactory(FluidStackElement::new);
-
     private final String location;
     private final int color;
 
+    private final int id;
     private final boolean showAmountText;
     private final int amount;
     private TextureAtlasSprite sprite = null;
 
-    public FluidStackElement(@NotNull FluidStack stack) {
-        this(stack, false);
+    public FluidStackElement(int id, @NotNull FluidStack stack) {
+        this(id, stack, false);
     }
 
-    public FluidStackElement(@NotNull FluidStack stack, boolean showAmountText) {
-        this(stack.getFluid().getStill(stack), stack.getFluid().getColor(stack), stack.amount, showAmountText);
+    public FluidStackElement(int id, @NotNull FluidStack stack, boolean showAmountText) {
+        this(id, stack.getFluid().getStill(stack), stack.getFluid().getColor(stack), stack.amount, showAmountText);
     }
 
-    public FluidStackElement(@NotNull ResourceLocation location, int color, int amount) {
-        this(location, color, amount, false);
+    public FluidStackElement(int id, @NotNull ResourceLocation location, int color, int amount) {
+        this(id, location, color, amount, false);
     }
 
-    public FluidStackElement(@NotNull ResourceLocation location, int color, int amount, boolean showAmountText) {
+    public FluidStackElement(int id, @NotNull ResourceLocation location, int color, int amount, boolean showAmountText) {
         this.location = location.toString();
         this.color = color;
         this.amount = amount;
         this.showAmountText = showAmountText;
+        this.id = id;
     }
 
     public FluidStackElement(@NotNull ByteBuf buf) {
@@ -54,6 +54,7 @@ public class FluidStackElement implements IElement {
         this.color = buf.readInt();
         this.amount = buf.readInt();
         this.showAmountText = buf.readBoolean();
+        this.id = buf.readInt();
     }
 
     @Override
@@ -102,10 +103,12 @@ public class FluidStackElement implements IElement {
         buf.writeInt(color);
         buf.writeInt(amount);
         buf.writeBoolean(showAmountText);
+        buf.writeInt(this.id);
     }
 
     @Override
     public int getID() {
-        return ID;
+        return this.id;
     }
+
 }

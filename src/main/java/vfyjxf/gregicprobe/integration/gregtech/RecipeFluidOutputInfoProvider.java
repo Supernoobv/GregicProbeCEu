@@ -17,6 +17,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import vfyjxf.gregicprobe.config.GregicProbeConfig;
+import vfyjxf.gregicprobe.element.ElementSync;
 import vfyjxf.gregicprobe.element.FluidStackElement;
 
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class RecipeFluidOutputInfoProvider extends CapabilityInfoProvider<IWorka
                     if (fluidOutput != null && fluidOutput.amount > 0) {
 
                         if (GregicProbeConfig.displayBukkit || !GregicProbeConfig.displayFluidName)
-                            horizontalPane.element(new FluidStackElement(fluidOutput, GregicProbeConfig.displayFluidQuantities));
+                            horizontalPane.element(new FluidStackElement(ElementSync.getElementId("fluid_stack"), fluidOutput, GregicProbeConfig.displayFluidQuantities));
 
                         if ((!GregicProbeConfig.displayFluidName || fluidOutputs.size() > 2) && !GregicProbeConfig.displayFluidQuantities) {
                             if (fluidOutput.amount >= 1000) {
