@@ -19,21 +19,17 @@ import java.io.File;
 
 
 @Mod(
-        modid = GregicProbe.MODID,
-        name = GregicProbe.NAME,
-        version = GregicProbe.VERSION,
+        modid = Tags.MODID,
+        name = Tags.MODNAME,
+        version = Tags.VERSION,
         dependencies = "required-after:gregtech;required-after:theoneprobe",
         guiFactory = "vfyjxf.gregicprobe.config.GregicProbeGuiFactory",
         useMetadata = true
 )
 public class GregicProbe {
-    public static final String MODID = "gregicprobe";
-    public static final String NAME = "Gregic Probe";
-    public static final String VERSION = "1.3.1";
-
     public static Configuration config;
 
-    public static Logger logger = LogManager.getLogger(GregicProbe.NAME);
+    public static Logger logger = LogManager.getLogger(Tags.MODNAME );
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event){
