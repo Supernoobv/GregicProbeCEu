@@ -10,7 +10,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import vfyjxf.gregicprobe.GregicProbe;
 import vfyjxf.gregicprobe.element.ElementSync;
-import vfyjxf.gregicprobe.network.capability.IClientCompability;
 
 import java.util.HashMap;
 import java.util.Map;
