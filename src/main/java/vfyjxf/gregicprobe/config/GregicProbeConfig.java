@@ -52,6 +52,7 @@ public class GregicProbeConfig {
         }
     }
 
+    // to be used (eventually)
     public static Map<String, Integer> getValues(Configuration config) {
         Map<String, Integer> values = new HashMap<>();
         for (Map.Entry<String, Property> entry : config.getCategory("general").entrySet()) {
