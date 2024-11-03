@@ -8,6 +8,7 @@ import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import vfyjxf.gregicprobe.GregicProbe;
+import vfyjxf.gregicprobe.Tags;
 
 import java.io.File;
 import java.util.HashMap;
@@ -42,6 +43,13 @@ public class GregicProbeConfig {
 
         if (config.hasChanged()) {
             config.save();
+        }
+    }
+
+    @SubscribeEvent
+    public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+        if (Tags.MODID.equals(event.getModID())) {
+            ConfigManager.sync(Tags.MODID, Config.Type.INSTANCE);
         }
     }
 
