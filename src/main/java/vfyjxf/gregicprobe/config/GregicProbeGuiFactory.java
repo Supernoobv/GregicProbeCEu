@@ -7,6 +7,7 @@ import net.minecraftforge.fml.client.IModGuiFactory;
 import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.IConfigElement;
 import vfyjxf.gregicprobe.GregicProbe;
+import vfyjxf.gregicprobe.Tags;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,7 @@ public class GregicProbeGuiFactory implements IModGuiFactory {
 
     @Override
     public GuiScreen createConfigGui(GuiScreen parentScreen) {
-        return new GuiConfig(parentScreen, getConfigElements(), GregicProbe.MODID, false, false, GregicProbe.NAME);
+        return new GuiConfig(parentScreen, getConfigElements(), Tags.MODID, false, false, Tags.MODNAME);
     }
 
     @Override

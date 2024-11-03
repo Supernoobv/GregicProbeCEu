@@ -3,6 +3,9 @@ package vfyjxf.gregicprobe.integration.gregtech;
 import gregtech.api.capability.GregtechTileCapabilities;
 import gregtech.api.capability.IWorkable;
 import gregtech.api.capability.impl.AbstractRecipeLogic;
+import gregtech.api.fluids.GTFluid;
+import gregtech.api.util.GTUtility;
+import gregtech.api.util.LocalizationUtils;
 import gregtech.integration.theoneprobe.provider.CapabilityInfoProvider;
 import mcjty.theoneprobe.api.ElementAlignment;
 import mcjty.theoneprobe.api.IProbeHitData;
@@ -16,6 +19,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import org.jetbrains.annotations.Nullable;
 import vfyjxf.gregicprobe.config.GregicProbeConfig;
 import vfyjxf.gregicprobe.element.ElementSync;
 import vfyjxf.gregicprobe.element.FluidStackElement;
@@ -27,6 +31,7 @@ public class RecipeFluidOutputInfoProvider extends CapabilityInfoProvider<IWorka
     public RecipeFluidOutputInfoProvider() {
 
     }
+
 
     @Override
     protected Capability<IWorkable> getCapability() {
@@ -41,13 +46,21 @@ public class RecipeFluidOutputInfoProvider extends CapabilityInfoProvider<IWorka
             if (!fluidOutputs.isEmpty()) {
                 horizontalPane.text(TextStyleClass.INFO + "{*gregicprobe.top.fluid.outputs*} ");
 
+                int fluidsToDisplay = 2;
+                if (player.isSneaking()) fluidsToDisplay = 6;
+
+                int index = -1;
                 for (FluidStack fluidOutput : fluidOutputs) {
                     if (fluidOutput != null && fluidOutput.amount > 0) {
+
+                        index++;
+
+                        if (index % 2 == 0 && fluidOutputs.size() <= fluidsToDisplay && fluidOutputs.size() >= 2) horizontalPane = probeInfo.horizontal(probeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER));
 
                         if (GregicProbeConfig.displayBukkit || !GregicProbeConfig.displayFluidName)
                             horizontalPane.element(new FluidStackElement(ElementSync.getElementId("fluid_stack"), fluidOutput, GregicProbeConfig.displayFluidQuantities));
 
-                        if ((!GregicProbeConfig.displayFluidName || fluidOutputs.size() > 2) && !GregicProbeConfig.displayFluidQuantities) {
+                        if ((!GregicProbeConfig.displayFluidName || fluidOutputs.size() > fluidsToDisplay) && !GregicProbeConfig.displayFluidQuantities) {
                             if (fluidOutput.amount >= 1000) {
                                 horizontalPane.text(TextStyleClass.INFO + " * " + (fluidOutput.amount / 1000) + "B");
                             } else {
@@ -55,12 +68,11 @@ public class RecipeFluidOutputInfoProvider extends CapabilityInfoProvider<IWorka
                             }
                         }
 
-                        if (GregicProbeConfig.displayFluidName && fluidOutputs.size() <= 2 && !GregicProbeConfig.displayFluidQuantities) {
+                        if (GregicProbeConfig.displayFluidName && fluidOutputs.size() <= fluidsToDisplay && !GregicProbeConfig.displayFluidQuantities) {
                             horizontalPane.text(TextStyleClass.INFO + " {*" + fluidOutput.getLocalizedName() + "*}" + " * " + fluidOutput.amount + "mb ");
-                        } else if (GregicProbeConfig.displayFluidQuantities && fluidOutputs.size() <= 2) {
-                            horizontalPane.text(TextStyleClass.INFO + " {*" + fluidOutput.getLocalizedName() + "*}");
+                        } else if (GregicProbeConfig.displayFluidQuantities && fluidOutputs.size() <= fluidsToDisplay) {
+                                horizontalPane.text(TextStyleClass.INFO + " {*" + fluidOutput.getLocalizedName() + "*} ");
                         }
-
                     }
                 }
             }

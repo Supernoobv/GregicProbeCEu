@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import vfyjxf.gregicprobe.config.GregicProbeConfig;
@@ -29,7 +30,7 @@ import java.io.File;
 public class GregicProbe {
     public static Configuration config;
 
-    public static Logger logger = LogManager.getLogger(Tags.MODNAME );
+    public static Logger logger = LogManager.getLogger(Tags.MODNAME);
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event){
