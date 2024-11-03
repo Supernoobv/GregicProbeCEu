@@ -45,39 +45,5 @@ public class GregicProbeConfig {
         }
     }
 
-    @SubscribeEvent
-    public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (GregicProbe.MODID.equals(event.getModID())) {
-            ConfigManager.sync(GregicProbe.MODID, Config.Type.INSTANCE);
-        }
-    }
-
-    // to be used (eventually)
-    public static Map<String, Integer> getValues(Configuration config) {
-        Map<String, Integer> values = new HashMap<>();
-        for (Map.Entry<String, Property> entry : config.getCategory("general").entrySet()) {
-            Property prop = entry.getValue();
-            switch (entry.getValue().getType()) {
-                case BOOLEAN: {
-                    values.put(entry.getKey(), prop.getBoolean() ? 1 : 0);
-                }
-                case INTEGER: {
-                    values.put(entry.getKey(), prop.getInt());
-                }
-                case STRING: {
-                    for (int i = 0; i < prop.getValidValues().length; i++) {
-                        if (prop.getValidValues()[i].equals(prop.getString())) {
-                            values.put(entry.getKey(), i);
-                        }
-                    }
-                }
-                default: {
-                    values.put(entry.getKey(), entry.getValue().getInt());
-                }
-            }
-        }
-
-        return values;
-    }
 
 }

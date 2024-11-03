@@ -59,8 +59,16 @@ public class FluidStackElement implements IElement {
 
     @Override
     public void render(int x, int y) {
+        String actualLocation = location;
+
+        // Gregtech fluids added by GRS do this for some reason
+        // As a consequence the fluid texture from /dull will not show up on anything from GRS.
+        if (location.contains("material_sets/fluid/") && (location.contains("/gas") || location.contains("/plasma"))) {
+            actualLocation = location.replace("material_sets/fluid/", "material_sets/dull/");
+        }
+
         if (sprite == null) {
-            sprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location);
+            sprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(actualLocation);
         }
 
         GlStateManager.enableBlend();

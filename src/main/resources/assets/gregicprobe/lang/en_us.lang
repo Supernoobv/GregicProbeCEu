@@ -1,4 +1,4 @@
 gregicprobe:top.eut=EUt:
 gregicprobe:top.item.outputs=Item Crafting:
 gregicprobe.top.fluid.outputs=Fluid Crafting:
-gregicprobe.top.pipe.energy=Avg. Energy: §a%s EU/t §f(%s§f) @ §a%sA
+gregicprobe.top.pipe.energy=Avg. Energy: §a%s EU/t §f(%s§f/%s§f) @ §a%s§f/§a%s A
