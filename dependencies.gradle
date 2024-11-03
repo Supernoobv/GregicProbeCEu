@@ -40,7 +40,5 @@
 dependencies {
     api("codechicken:codechickenlib:3.2.3.358")
     api rfg.deobf("curse.maven:gregtech-ce-unofficial-557242:5519022")
-
-    // only used to debug texture maps
-    implementation rfg.deobf("curse.maven:groovyscript-687577:5789690")
+    
 }
