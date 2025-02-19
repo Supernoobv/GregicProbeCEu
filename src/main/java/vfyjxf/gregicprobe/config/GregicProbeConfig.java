@@ -19,30 +19,23 @@ public class GregicProbeConfig {
 
     public static Configuration config;
 
-    public static boolean displayItemOutputs = true;
-    public static boolean displayFluidOutputs = true;
-    public static boolean displayBukkit = true;
-    public static boolean displayItemName = true;
-    public static boolean displayFluidName = true;
+    public static boolean displayRecipeOutputs = true;
     public static boolean displayFluidQuantities = true;
     public static boolean displayCableAverage = true;
-
+    public static int itemFluidDetailLimit = 4;
     public static void initConfig(File configFile) {
         config = new Configuration(configFile);
 
         config.load();
         //general
         {
-            displayItemOutputs = config.getBoolean("DisplayItemOutputs", "general", true, "If true, the item outputs of the current recipe will be displayed");
-            displayFluidOutputs = config.getBoolean("DisplayFluidOutputs", "general", true, "If true, the fluid outputs of the current recipe will be displayed");
-            displayItemName = config.getBoolean("ShowItemName", "general", true, "If true, the name of the item will be displayed");
-            displayFluidName = config.getBoolean("ShowFluidName", "general", true, "If true, the name of the fluid will be displayed");
-            displayFluidQuantities = config.getBoolean("ShowFluidQuantities", "general", true, "If true, The quantity of the fluid will be displayed below the fluid, instead of the right, this is useful for removing clutter.");
+            displayRecipeOutputs = config.getBoolean("DisplayRecipeOutputs", "general", true, "If true, recipe fluid and outputs will be displayed.");
             displayCableAverage = config.getBoolean("DisplayCableAverages", "general", true, "If true, the average energy and amperage of a cable net will be shown.");
-        }
+            itemFluidDetailLimit = config.getInt("ItemFluidDetailLimit", "general", 4, 1, 40, "How many items and fluids can be shown at once before it starts hiding names.");
 
-        if (config.hasChanged()) {
-            config.save();
+            if (config.hasChanged()) {
+                config.save();
+            }
         }
     }
 

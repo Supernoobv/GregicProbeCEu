@@ -3,6 +3,7 @@ package vfyjxf.gregicprobe.element;
 import gregtech.api.util.TextFormattingUtil;
 import gregtech.client.utils.RenderUtil;
 
+import mcjty.theoneprobe.network.NetworkTools;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -23,37 +24,24 @@ public class FluidStackElement implements IElement {
     private final int color;
 
     private final int id;
-    private final boolean showAmountText;
     private final int amount;
     private TextureAtlasSprite sprite = null;
 
     public FluidStackElement(int id, @NotNull FluidStack stack) {
-        this(id, stack, false);
-    }
-
-    public FluidStackElement(int id, @NotNull FluidStack stack, boolean showAmountText) {
-        this(id, stack.getFluid().getStill(stack), stack.getFluid().getColor(stack), stack.amount, showAmountText);
+        this(id, stack.getFluid().getStill(stack), stack.getFluid().getColor(stack), stack.amount);
     }
 
     public FluidStackElement(int id, @NotNull ResourceLocation location, int color, int amount) {
-        this(id, location, color, amount, false);
-    }
-
-    public FluidStackElement(int id, @NotNull ResourceLocation location, int color, int amount, boolean showAmountText) {
         this.location = location.toString();
         this.color = color;
         this.amount = amount;
-        this.showAmountText = showAmountText;
         this.id = id;
     }
 
     public FluidStackElement(@NotNull ByteBuf buf) {
-        byte[] bytes = new byte[buf.readInt()];
-        buf.readBytes(bytes);
-        this.location = new String(bytes, StandardCharsets.UTF_8);
+        this.location = NetworkTools.readStringUTF8(buf);
         this.color = buf.readInt();
         this.amount = buf.readInt();
-        this.showAmountText = buf.readBoolean();
         this.id = buf.readInt();
     }
 
@@ -62,7 +50,6 @@ public class FluidStackElement implements IElement {
         String actualLocation = location;
 
         // Gregtech fluids added by GRS do this for some reason
-        // As a consequence the fluid texture from /dull will not show up on anything from GRS.
         if (location.contains("material_sets/fluid/") && (location.contains("/gas") || location.contains("/plasma"))) {
             actualLocation = location.replace("material_sets/fluid/", "material_sets/dull/");
         }
@@ -77,7 +64,7 @@ public class FluidStackElement implements IElement {
         RenderUtil.setGlColorFromInt(color, 0xFF);
         RenderUtil.drawFluidTexture(x, y, sprite, 0, 0, 0);
 
-        if (showAmountText && amount > 0) {
+        if (amount > 0) {
             GlStateManager.pushMatrix();
             GlStateManager.scale(0.5, 0.5, 1);
             Minecraft minecraft = Minecraft.getMinecraft();
@@ -105,12 +92,9 @@ public class FluidStackElement implements IElement {
 
     @Override
     public void toBytes(@NotNull ByteBuf buf) {
-        byte[] bytes = location.getBytes(StandardCharsets.UTF_8);
-        buf.writeInt(bytes.length);
-        buf.writeBytes(bytes);
+        NetworkTools.writeStringUTF8(buf, location);
         buf.writeInt(color);
         buf.writeInt(amount);
-        buf.writeBoolean(showAmountText);
         buf.writeInt(this.id);
     }
 

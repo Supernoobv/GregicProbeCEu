@@ -12,14 +12,11 @@ public class GregicProbeCompatibility {
 
     public static void registerCompatibility() {
         ITheOneProbe oneProbe = TheOneProbe.theOneProbeImp;
-        if (GregicProbeConfig.displayItemOutputs) {
-            oneProbe.registerProvider(new RecipeItemOutputInfoProvider());
-        }
-        if (GregicProbeConfig.displayFluidOutputs) {
-            oneProbe.registerProvider(new RecipeFluidOutputInfoProvider());
-        }
         if (GregicProbeConfig.displayCableAverage) {
             oneProbe.registerProvider(new CableTileInfoProvider());
+        }
+        if (GregicProbeConfig.displayRecipeOutputs) {
+            oneProbe.registerProvider(new RecipeOutputInfoProvider());
         }
     }
 }

@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import vfyjxf.gregicprobe.config.GregicProbeConfig;
 import vfyjxf.gregicprobe.element.ElementSync;
+import vfyjxf.gregicprobe.element.FluidNameElement;
 import vfyjxf.gregicprobe.element.FluidStackElement;
 import vfyjxf.gregicprobe.integration.GregicProbeCompatibility;
 import vfyjxf.gregicprobe.network.PacketHandler;
@@ -38,6 +39,7 @@ public class GregicProbe {
         GregicProbeConfig.initConfig(new File(event.getModConfigurationDirectory().getPath(), "gregicprobe.cfg"));
 
         ElementSync.registerElement("fluid_stack", FluidStackElement::new);
+        ElementSync.registerElement("fluid_name", FluidNameElement::new);
 
         MinecraftForge.EVENT_BUS.register(new SyncEvents());
 
