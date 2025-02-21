@@ -6,6 +6,14 @@ Current Features:
  - Viewing average energy/amperage going through a cable.
 
 ## Credits
-vfyjxy: Creating the original mod
+[Vfyjxf](https://github.com/vfyjxf): Creating the original mod [Which can be found here](https://www.curseforge.com/minecraft/mc-mods/gregicprobe)
 
-tian_mi: Idea/Code for cable info
+[Tian_Mi](https://github.com/MCTian-mi): Idea/Code for cable info
+
+[Nomilabs](https://github.com/Nomi-CEu/Nomi-Labs/tree/main) and [IntegerLimit](https://github.com/IntegerLimit) For:
+
+- Server lang implementation [Here](https://github.com/Nomi-CEu/Nomi-Labs/blob/main/src/main/java/com/nomiceu/nomilabs/util/LabsTranslate.java)
+
+- Fluid name display [Here](https://github.com/Nomi-CEu/Nomi-Labs/blob/main/src/main/java/com/nomiceu/nomilabs/integration/top/LabsFluidNameElement.java)
+
+- and Updated Recipe Output code [Here](https://github.com/Nomi-CEu/Nomi-Labs/blob/main/src/main/java/com/nomiceu/nomilabs/integration/top/RecipeOutputsProvider.java)
