@@ -9,6 +9,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 import vfyjxf.gregicprobe.GregicProbe;
+import vfyjxf.gregicprobe.integration.TOPManager;
 import vfyjxf.gregicprobe.util.TranslationUtils;
 
 public class FluidNameElement implements IElement {
@@ -17,15 +18,13 @@ public class FluidNameElement implements IElement {
     private final int amount;
     private final boolean showLang;
     private final String translatedName;
-    private final int id;
 
-    public FluidNameElement(FluidStack fluid, boolean showLang, int id) {
+    public FluidNameElement(FluidStack fluid, boolean showLang) {
         this.fluidName = fluid.getFluid().getName();
         this.amount = fluid.amount;
         this.showLang = showLang;
 
         this.translatedName = fluid.getUnlocalizedName();
-        this.id = id;
     }
 
     public FluidNameElement(ByteBuf byteBuf) {
@@ -33,12 +32,11 @@ public class FluidNameElement implements IElement {
         this.amount = byteBuf.readInt();
         this.showLang = byteBuf.readBoolean();
         this.translatedName = translateFluid(fluidName, amount);
-        this.id = byteBuf.readInt();
     }
 
     @Override
     public int getWidth() {
-        return ElementTextRender.getWidth("");
+        return ElementTextRender.getWidth(getTranslated());
     }
 
     @Override
@@ -51,7 +49,6 @@ public class FluidNameElement implements IElement {
         NetworkTools.writeStringUTF8(byteBuf, fluidName);
         byteBuf.writeInt(amount);
         byteBuf.writeBoolean(showLang);
-        byteBuf.writeInt(id);
     }
 
     @Override
@@ -61,7 +58,7 @@ public class FluidNameElement implements IElement {
 
     @Override
     public int getID() {
-        return this.id;
+        return TOPManager.FLUID_NAME_ELEMENT;
     }
 
     public String getTranslated() {

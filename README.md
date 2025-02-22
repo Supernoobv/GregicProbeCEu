@@ -16,4 +16,8 @@ Current Features:
 
 - Fluid name display [Here](https://github.com/Nomi-CEu/Nomi-Labs/blob/main/src/main/java/com/nomiceu/nomilabs/integration/top/LabsFluidNameElement.java)
 
-- and Updated Recipe Output code [Here](https://github.com/Nomi-CEu/Nomi-Labs/blob/main/src/main/java/com/nomiceu/nomilabs/integration/top/RecipeOutputsProvider.java)
+- Updated Recipe Output code [Here](https://github.com/Nomi-CEu/Nomi-Labs/blob/main/src/main/java/com/nomiceu/nomilabs/integration/top/RecipeOutputsProvider.java)
+
+- Chanced Item/Fluid Display:
+  - [Here](https://github.com/Nomi-CEu/Nomi-Labs/blob/main/src/main/java/com/nomiceu/nomilabs/integration/top/RecipeOutputsProvider.java#L203) (1)
+  - [Here](https://github.com/Nomi-CEu/Nomi-Labs/blob/main/src/main/java/com/nomiceu/nomilabs/mixin/gregtech/AbstractRecipeLogicMixin.java#L42) (2)

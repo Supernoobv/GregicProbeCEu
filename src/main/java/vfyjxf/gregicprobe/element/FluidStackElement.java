@@ -12,37 +12,32 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
 import io.netty.buffer.ByteBuf;
-import mcjty.theoneprobe.TheOneProbe;
 import mcjty.theoneprobe.api.IElement;
 import org.jetbrains.annotations.NotNull;
-
-import java.nio.charset.StandardCharsets;
+import vfyjxf.gregicprobe.integration.TOPManager;
 
 public class FluidStackElement implements IElement {
 
     private final String location;
     private final int color;
 
-    private final int id;
     private final int amount;
     private TextureAtlasSprite sprite = null;
 
-    public FluidStackElement(int id, @NotNull FluidStack stack) {
-        this(id, stack.getFluid().getStill(stack), stack.getFluid().getColor(stack), stack.amount);
+    public FluidStackElement(@NotNull FluidStack stack) {
+        this(stack.getFluid().getStill(stack), stack.getFluid().getColor(stack), stack.amount);
     }
 
-    public FluidStackElement(int id, @NotNull ResourceLocation location, int color, int amount) {
+    public FluidStackElement(@NotNull ResourceLocation location, int color, int amount) {
         this.location = location.toString();
         this.color = color;
         this.amount = amount;
-        this.id = id;
     }
 
     public FluidStackElement(@NotNull ByteBuf buf) {
         this.location = NetworkTools.readStringUTF8(buf);
         this.color = buf.readInt();
         this.amount = buf.readInt();
-        this.id = buf.readInt();
     }
 
     @Override
@@ -82,7 +77,7 @@ public class FluidStackElement implements IElement {
 
     @Override
     public int getWidth() {
-        return 18;
+        return 16;
     }
 
     @Override
@@ -95,12 +90,11 @@ public class FluidStackElement implements IElement {
         NetworkTools.writeStringUTF8(buf, location);
         buf.writeInt(color);
         buf.writeInt(amount);
-        buf.writeInt(this.id);
     }
 
     @Override
     public int getID() {
-        return this.id;
+        return TOPManager.FLUID_STACK_ELEMENT;
     }
 
 }

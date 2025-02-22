@@ -1,22 +1,17 @@
 package vfyjxf.gregicprobe;
 
 
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import scala.xml.Elem;
 import vfyjxf.gregicprobe.config.GregicProbeConfig;
-import vfyjxf.gregicprobe.element.ElementSync;
-import vfyjxf.gregicprobe.element.FluidNameElement;
-import vfyjxf.gregicprobe.element.FluidStackElement;
-import vfyjxf.gregicprobe.integration.GregicProbeCompatibility;
-import vfyjxf.gregicprobe.network.PacketHandler;
-import vfyjxf.gregicprobe.network.SyncEvents;
+import vfyjxf.gregicprobe.integration.TOPManager;
+
 import java.io.File;
 
 
@@ -38,17 +33,11 @@ public class GregicProbe {
         config = new Configuration(new File(event.getModConfigurationDirectory().getPath(), "gregicprobe.cfg"));
         GregicProbeConfig.initConfig(new File(event.getModConfigurationDirectory().getPath(), "gregicprobe.cfg"));
 
-        ElementSync.registerElement("fluid_stack", FluidStackElement::new);
-        ElementSync.registerElement("fluid_name", FluidNameElement::new);
-
-        MinecraftForge.EVENT_BUS.register(new SyncEvents());
-
-        PacketHandler.init();
+        TOPManager.register();
     }
 
     @EventHandler
     public void onInit(FMLInitializationEvent event) {
         logger.info("GregTech support loading");
-        GregicProbeCompatibility.registerCompatibility();
     }
 }
