@@ -40,7 +40,6 @@ import vfyjxf.gregicprobe.util.TranslationUtils;
  * "https://github.com/Nomi-CEu/Nomi-Labs/blob/main/src/main/java/com/nomiceu/nomilabs/integration/top/RecipeOutputsProvider.java">NomiLabs</a>.
  */
 public class RecipeOutputInfoProvider extends CapabilityInfoProvider<IWorkable> {
-    private static final int AMOUNT_IN_ROW = 10;
     private static final DecimalFormat format = new DecimalFormat("#.#");
 
     public RecipeOutputInfoProvider() {
@@ -120,7 +119,7 @@ public class RecipeOutputInfoProvider extends CapabilityInfoProvider<IWorkable> 
         int idx = 0;
 
         for (var entry : list) {
-            if (idx >= AMOUNT_IN_ROW) break;
+            if (idx >= GregicProbeConfig.maxEntriesToShowInRow) break;
 
             panel.element(getElement.apply(entry));
             idx++;
@@ -213,7 +212,7 @@ public class RecipeOutputInfoProvider extends CapabilityInfoProvider<IWorkable> 
 
 
     private IProbeInfo createHorizontalLayout(IProbeInfo mainPanel) {
-        return mainPanel.horizontal(new LayoutStyle().spacing(2));
+        return mainPanel.horizontal(new LayoutStyle().spacing(GregicProbeConfig.rowDistanceSeperation));
     }
 
     @Override
