@@ -21,7 +21,6 @@ public class GregicProbeConfig {
 
     // general
     public static boolean displayRecipeOutputs = true;
-    public static boolean displayFluidQuantities = true;
     public static boolean displayCableAverage = true;
     public static int itemFluidDetailLimit = 10;
     public static int maxEntriesToShowInRow = 12;
@@ -39,14 +38,15 @@ public class GregicProbeConfig {
             displayCableAverage = config.getBoolean("DisplayCableAverages", "general", true, "If true, the average energy and amperage of a cable net will be shown.");
             itemFluidDetailLimit = config.getInt("ItemFluidDetailLimit", "general", 4, 1, 40, "How many items and fluids can be shown at once before it starts hiding names.");
             maxEntriesToShowInRow = config.getInt("MaxEntriesToShowInRow", "general", 12, 1, 40, "How many items and fluids are shown in seperate rows (when ItemFluidDetailLimit is exceeded)");
-            if (config.hasChanged()) {
-                config.save();
-            }
+
         }
+
         // display
         {
             rowDistanceSeperation = config.getInt("RowDistanceSeperation", "display", 2, 0, 10, "How far items and fluids are seperated when shown in rows.");
-
+        }
+        if (config.hasChanged()) {
+            config.save();
         }
     }
 
