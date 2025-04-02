@@ -38,7 +38,6 @@ public class GregicProbeConfig {
             displayCableAverage = config.getBoolean("DisplayCableAverages", "general", true, "If true, the average energy and amperage of a cable net will be shown.");
             itemFluidDetailLimit = config.getInt("ItemFluidDetailLimit", "general", 4, 1, 40, "How many items and fluids can be shown at once before it starts hiding names.");
             maxEntriesToShowInRow = config.getInt("MaxEntriesToShowInRow", "general", 12, 1, 40, "How many items and fluids are shown in seperate rows (when ItemFluidDetailLimit is exceeded)");
-
         }
 
         // display

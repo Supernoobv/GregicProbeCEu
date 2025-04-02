@@ -1,7 +1,9 @@
 package vfyjxf.gregicprobe.mixin.gregtech;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 import gregtech.api.capability.impl.AbstractRecipeLogic;
 import net.minecraft.item.ItemStack;
@@ -13,6 +15,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -33,6 +36,7 @@ import gregtech.api.recipes.chance.boost.ChanceBoostFunction;
 import gregtech.api.recipes.chance.output.ChancedOutput;
 import gregtech.api.recipes.chance.output.ChancedOutputList;
 import gregtech.api.recipes.chance.output.ChancedOutputLogic;
+import vfyjxf.gregicprobe.GregicProbe;
 import vfyjxf.gregicprobe.mixin.helper.AccessorAbstractRecipeLogic;
 
 /**
@@ -71,6 +75,10 @@ public abstract class AbstractRecipeLogicMixin extends MTETrait implements Acces
     private RecipeMap<?> recipeMap;
     @Shadow
     protected int progressTime;
+
+    @Shadow
+    public abstract @Nullable RecipeMap<?> getRecipeMap();
+
     /**
      * List of non-chanced item outputs.The actual non-chanced item outputs are taken from the item outputs saved list,
      * taking the first n elements.
@@ -107,12 +115,22 @@ public abstract class AbstractRecipeLogicMixin extends MTETrait implements Acces
     @Unique
     @Override
     public List<ItemStack> probe$getOutputs() {
+        if (itemOutputs == null) {
+            GregicProbe.logger.error("Item Outputs List for Recipe Logic {} of Recipe Map {} is null!",
+                    getClass().getName(), getRecipeMap().getUnlocalizedName());
+            return new ArrayList<>();
+        }
         return itemOutputs;
     }
 
     @Unique
     @Override
     public List<FluidStack> probe$getFluidOutputs() {
+        if (fluidOutputs == null) {
+            GregicProbe.logger.error("Fluid Outputs List for Recipe Logic {} of Recipe Map {} is null!",
+                    getClass().getName(), getRecipeMap().getUnlocalizedName());
+            return new ArrayList<>();
+        }
         return fluidOutputs;
     }
 
@@ -131,6 +149,11 @@ public abstract class AbstractRecipeLogicMixin extends MTETrait implements Acces
     @Unique
     @Override
     public List<Pair<ItemStack, Integer>> probe$getChancedItemOutputs() {
+        if (probe$chancedItemOutputs == null) {
+            GregicProbe.logger.error("Chanced Item Outputs List for Recipe Logic {} of Recipe Map {} is null!",
+                    getClass().getName(), getRecipeMap().getUnlocalizedName());
+            return new ArrayList<>();
+        }
         return probe$chancedItemOutputs;
     }
 
@@ -143,6 +166,11 @@ public abstract class AbstractRecipeLogicMixin extends MTETrait implements Acces
     @Unique
     @Override
     public List<Pair<FluidStack, Integer>> probe$getChancedFluidOutputs() {
+        if (probe$chancedFluidOutputs == null) {
+            GregicProbe.logger.error("Chanced Fluid Outputs List for Recipe Logic {} of Recipe Map {} is null!",
+                    getClass().getName(), getRecipeMap().getUnlocalizedName());
+            return new ArrayList<>();
+        }
         return probe$chancedFluidOutputs;
     }
 
@@ -161,11 +189,20 @@ public abstract class AbstractRecipeLogicMixin extends MTETrait implements Acces
         probe$nonChancedItemAmt = recipe.getOutputs().size();
         probe$nonChancedFluidAmt = recipe.getFluidOutputs().size();
 
-        probe$chancedItemOutputs = probe$fillChancedOutputsMap(recipe.getChancedOutputs(), recipeMap.getChanceFunction(),
+        probe$chancedItemOutputs = probe$fillChancedOutputsMap(recipe.getChancedOutputs(), getRecipeMap().getChanceFunction(),
                 recipeTier, machineTier);
         probe$chancedFluidOutputs = probe$fillChancedOutputsMap(recipe.getChancedFluidOutputs(),
-                recipeMap.getChanceFunction(),
+                getRecipeMap().getChanceFunction(),
                 recipeTier, machineTier);
+
+        // The LBB Incident :thumbsup:
+        if (probe$chancedItemOutputs == null) {
+            probe$chancedItemOutputs = Collections.emptyList();
+        }
+
+        if (probe$chancedFluidOutputs == null) {
+            probe$chancedFluidOutputs = Collections.emptyList();
+        }
     }
 
     @Unique
@@ -212,22 +249,23 @@ public abstract class AbstractRecipeLogicMixin extends MTETrait implements Acces
         nbt.setInteger(NON_CHANCED_ITEM_AMT, probe$nonChancedItemAmt);
         nbt.setInteger(ON_CHANCED_FLUID_AMT_KEY, probe$nonChancedFluidAmt);
 
-        var items = new NBTTagList();
-        for (var entry : probe$chancedItemOutputs) {
-            var tag = new NBTTagCompound();
-            entry.getKey().writeToNBT(tag);
-            tag.setInteger(CHANCE_KEY, entry.getValue());
-            items.appendTag(tag);
-        }
-        nbt.setTag(CHANCED_ITEM_OUTPUTS_KEY, items);
+        probe$addChancedToTag(nbt, CHANCED_ITEM_OUTPUTS_KEY, probe$chancedItemOutputs,
+                (entry) -> entry.getKey().writeToNBT(new NBTTagCompound()), Pair::getValue);
+        probe$addChancedToTag(nbt, CHANCED_FLUID_OUTPUTS_KEY, probe$chancedFluidOutputs,
+                (entry) -> entry.getKey().writeToNBT(new NBTTagCompound()), Pair::getValue);
+    }
 
-        var fluids = new NBTTagList();
-        for (var entry : probe$chancedFluidOutputs) {
-            var tag = new NBTTagCompound();
-            entry.getKey().writeToNBT(tag);
-            tag.setInteger(CHANCE_KEY, entry.getValue());
-            fluids.appendTag(tag);
+    @Unique
+    private <T> void probe$addChancedToTag(NBTTagCompound nbt, String key, List<T> list,
+                                           Function<T, NBTTagCompound> createTag, Function<T, Integer> getChance) {
+        if (list == null) return;
+
+        var entries = new NBTTagList();
+        for (var entry : list) {
+            NBTTagCompound tag = createTag.apply(entry);
+            tag.setInteger(CHANCE_KEY, getChance.apply(entry));
+            entries.appendTag(tag);
         }
-        nbt.setTag(CHANCED_FLUID_OUTPUTS_KEY, fluids);
+        nbt.setTag(key, entries);
     }
 }

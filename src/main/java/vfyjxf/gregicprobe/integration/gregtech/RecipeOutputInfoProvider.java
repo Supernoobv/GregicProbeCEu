@@ -37,7 +37,7 @@ import vfyjxf.gregicprobe.util.TranslationUtils;
 
 /**
  * From <a href=
- * "https://github.com/Nomi-CEu/Nomi-Labs/blob/main/src/main/java/com/nomiceu/nomilabs/integration/top/RecipeOutputsProvider.java">NomiLabs</a>.
+ * "https://github.com/Nomi-CEu/Nomi-/blob/main/src/main/java/com/nomiceu/nomi/integration/top/RecipeOutputsProvider.java">Nomi</a>.
  */
 public class RecipeOutputInfoProvider extends CapabilityInfoProvider<IWorkable> {
     private static final DecimalFormat format = new DecimalFormat("#.#");
@@ -128,7 +128,14 @@ public class RecipeOutputInfoProvider extends CapabilityInfoProvider<IWorkable> 
 
     private Pair<List<Pair<String, ElementItemStack>>, List<Pair<FluidNameElement, FluidStackElement>>> createItemFluidElementLists(AccessorAbstractRecipeLogic recipe) {
         // Items
-        var outputs = getUniqueItems(recipe.probe$getOutputs().subList(0, recipe.probe$getNonChancedItemAmt()));
+        var outputs = getUnique(recipe.probe$getOutputs().subList(0, recipe.probe$getNonChancedItemAmt()),
+                ItemStack::isEmpty, ItemMeta::new, ItemStack::getCount);
+
+        var chancedOutputs = getUnique(recipe.probe$getChancedItemOutputs(),
+                (chanced) -> chanced.getKey().isEmpty() || chanced.getValue() == 0,
+                (chanced) -> Pair.of(new ItemMeta(chanced.getKey()), chanced.getValue()),
+                (chanced) -> chanced.getKey().getCount());
+
         IItemStyle style = new ItemStyle().width(16).height(16);
         List<Pair<String, ElementItemStack>> items = new ArrayList<>();
 
@@ -137,14 +144,21 @@ public class RecipeOutputInfoProvider extends CapabilityInfoProvider<IWorkable> 
             items.add(Pair.of(stack.getDisplayName(), new ElementItemStack(stack, style)));
         }
 
-        for (var chanced : recipe.probe$getChancedItemOutputs()) {
-            String display = chanced.getKey().getDisplayName() + " (" + formatChance(chanced.getValue()) + ")";
-            items.add(Pair.of(display, new ChancedItemStackElement(chanced.getKey(), chanced.getValue(), style)));
+        for (var chanced : chancedOutputs.entrySet()) {
+            ItemStack stack = chanced.getKey().getKey().toStack(chanced.getValue());
+            String display = stack.getDisplayName() + " (" + formatChance(chanced.getKey().getValue()) + ")";
+            items.add(Pair.of(display, new ChancedItemStackElement(stack, chanced.getKey().getValue(), style)));
         }
 
         // Fluids
-        var fluidOutputs = getUniqueFluids(
-                recipe.probe$getFluidOutputs().subList(0, recipe.probe$getNonChancedFluidAmt()));
+        var fluidOutputs = getUnique(recipe.probe$getFluidOutputs().subList(0, recipe.probe$getNonChancedFluidAmt()),
+                (stack) -> stack.amount == 0, FluidStack::getFluid, (stack) -> stack.amount);
+
+        var chancedFluidOutputs = getUnique(recipe.probe$getChancedFluidOutputs(),
+                (chanced) -> chanced.getKey().amount == 0 || chanced.getValue() == 0,
+                (chanced) -> Pair.of(chanced.getKey().getFluid(), chanced.getValue()),
+                (chanced) -> chanced.getKey().amount);
+
         List<Pair<FluidNameElement, FluidStackElement>> fluids = new ArrayList<>();
 
         for (var output : fluidOutputs.entrySet()) {
@@ -152,37 +166,24 @@ public class RecipeOutputInfoProvider extends CapabilityInfoProvider<IWorkable> 
             fluids.add(Pair.of(new FluidNameElement(stack, false), new FluidStackElement(stack)));
         }
 
-        for (var chanced : recipe.probe$getChancedFluidOutputs()) {
-            fluids.add(Pair.of(new ChancedFluidNameElement(chanced.getKey(), chanced.getValue(), false),
-                    new ChancedFluidStackElement(chanced.getKey(), chanced.getValue())));
+        for (var chanced : chancedFluidOutputs.entrySet()) {
+            FluidStack stack = new FluidStack(chanced.getKey().getKey(), chanced.getValue());
+            fluids.add(Pair.of(new ChancedFluidNameElement(stack, chanced.getKey().getValue(), false),
+                    new ChancedFluidStackElement(stack, chanced.getKey().getValue())));
         }
         return Pair.of(items, fluids);
     }
 
-    private Map<ItemMeta, Integer> getUniqueItems(List<ItemStack> stacks) {
-        Map<ItemMeta, Integer> map = new Object2ObjectLinkedOpenHashMap<>();
+    private <T, K> Map<K, Integer> getUnique(List<T> stacks, Function<T, Boolean> emptyCheck, Function<T, K> getKey,
+                                             Function<T, Integer> getCount) {
+        Map<K, Integer> map = new Object2ObjectLinkedOpenHashMap<>();
 
-        for (var stack : stacks) {
-            if (stack.isEmpty()) continue;
+        for (T stack : stacks) {
+            if (emptyCheck.apply(stack)) continue;
 
-            map.compute(new ItemMeta(stack), (meta, count) -> {
+            map.compute(getKey.apply(stack), (key, count) -> {
                 if (count == null) count = 0;
-                return count + stack.getCount();
-            });
-        }
-
-        return map;
-    }
-
-    private Map<Fluid, Integer> getUniqueFluids(List<FluidStack> stacks) {
-        Map<Fluid, Integer> map = new Object2ObjectLinkedOpenHashMap<>();
-
-        for (var stack : stacks) {
-            if (stack.amount == 0) continue;
-
-            map.compute(stack.getFluid(), (meta, amount) -> {
-                if (amount == null) amount = 0;
-                return amount + stack.amount;
+                return count + getCount.apply(stack);
             });
         }
 
