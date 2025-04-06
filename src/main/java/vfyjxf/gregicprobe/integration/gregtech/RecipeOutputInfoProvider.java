@@ -54,8 +54,8 @@ public class RecipeOutputInfoProvider extends CapabilityInfoProvider<IWorkable> 
     protected void addProbeInfo(IWorkable capability, IProbeInfo probeInfo, EntityPlayer player, TileEntity tileEntity, IProbeHitData iProbeHitDat) {
         if (capability.getProgress() <= 0 || (!(capability instanceof AccessorAbstractRecipeLogic recipe))) return;
 
-        // Ignore generators
-        if (recipe.probe$getEUt() < 0) return;
+        // Invalid machines, ignore
+        if (!recipe.probe$isValidForOutputTOP()) return;
 
         var itemFluidLists = createItemFluidElementLists(recipe);
         var items = itemFluidLists.getLeft();

@@ -114,6 +114,12 @@ public abstract class AbstractRecipeLogicMixin extends MTETrait implements Acces
 
     @Unique
     @Override
+    public boolean probe$isValidForOutputTOP() {
+        return probe$getEUt() >= 0 && getRecipeMap() != null;
+    }
+
+    @Unique
+    @Override
     public List<ItemStack> probe$getOutputs() {
         if (itemOutputs == null) {
             GregicProbe.logger.error("Item Outputs List for Recipe Logic {} of Recipe Map {} is null!",
@@ -194,15 +200,6 @@ public abstract class AbstractRecipeLogicMixin extends MTETrait implements Acces
         probe$chancedFluidOutputs = probe$fillChancedOutputsMap(recipe.getChancedFluidOutputs(),
                 getRecipeMap().getChanceFunction(),
                 recipeTier, machineTier);
-
-        // The LBB Incident :thumbsup:
-        if (probe$chancedItemOutputs == null) {
-            probe$chancedItemOutputs = Collections.emptyList();
-        }
-
-        if (probe$chancedFluidOutputs == null) {
-            probe$chancedFluidOutputs = Collections.emptyList();
-        }
     }
 
     @Unique

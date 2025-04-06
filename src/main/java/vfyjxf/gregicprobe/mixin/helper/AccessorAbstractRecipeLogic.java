@@ -10,6 +10,8 @@ import java.util.List;
  * "https://github.com/Nomi-CEu/Nomi-Labs/blob/main/src/main/java/com/nomiceu/nomilabs/gregtech/mixinhelper/AccessibleAbstractRecipeLogic.java">NomiLabs</a>.
  */
 public interface AccessorAbstractRecipeLogic {
+    boolean probe$isValidForOutputTOP();
+
     List<ItemStack> probe$getOutputs();
 
     List<FluidStack> probe$getFluidOutputs();
@@ -23,4 +25,5 @@ public interface AccessorAbstractRecipeLogic {
     int probe$getNonChancedFluidAmt();
 
     List<Pair<FluidStack, Integer>> probe$getChancedFluidOutputs();
+
 }
