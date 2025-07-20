@@ -27,6 +27,7 @@ import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.elements.ElementItemStack;
 import mcjty.theoneprobe.apiimpl.styles.ItemStyle;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
+import mcjty.theoneprobe.rendering.RenderHelper;
 import vfyjxf.gregicprobe.config.GregicProbeConfig;
 import vfyjxf.gregicprobe.element.*;
 import vfyjxf.gregicprobe.mixin.helper.AccessorAbstractRecipeLogic;
@@ -192,23 +193,15 @@ public class RecipeOutputInfoProvider extends CapabilityInfoProvider<IWorkable> 
 
     @SideOnly(Side.CLIENT)
     public static void renderChance(int chance, int x, int y) {
-        GlStateManager.disableLighting();
-        GlStateManager.disableDepth();
-        GlStateManager.disableBlend();
-
         GlStateManager.pushMatrix();
         GlStateManager.scale(0.5f, 0.5f, 1);
         Minecraft mc = Minecraft.getMinecraft();
 
         String chanceTxt = formatChance(chance);
-        mc.fontRenderer.drawStringWithShadow(chanceTxt, (x + 17) * 2 - 1 - mc.fontRenderer.getStringWidth(chanceTxt),
-                y * 2, 0xffffffff);
+        RenderHelper.renderText(mc, (x + 17) * 2 - 1 - mc.fontRenderer.getStringWidth(chanceTxt),
+                y * 2, chanceTxt);
 
         GlStateManager.popMatrix();
-
-        GlStateManager.enableLighting();
-        GlStateManager.enableDepth();
-        GlStateManager.enableBlend();
     }
 
 
