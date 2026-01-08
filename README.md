@@ -10,6 +10,8 @@ Current Features:
 
 [Tian_Mi](https://github.com/MCTian-mi): Idea/Code for cable info
 
+[tier940](https://github.com/tier940) Japanese translation
+
 [Nomilabs](https://github.com/Nomi-CEu/Nomi-Labs/tree/main) and [IntegerLimit](https://github.com/IntegerLimit) For:
 
 - Server lang implementation [Here](https://github.com/Nomi-CEu/Nomi-Labs/blob/main/src/main/java/com/nomiceu/nomilabs/util/LabsTranslate.java)
